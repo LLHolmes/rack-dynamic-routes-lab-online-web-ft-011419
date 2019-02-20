@@ -6,15 +6,16 @@ class Application
 
     if req.path.match(/items/)
       item_name = req.path.split("/items/").last
-      item = @@songs.find{|s| s.title == song_title}
-      
-      resp.write song.artist
-    end
-    if req.path=="/items"
-      resp.write "You requested the songs"
+      item = Item.find_by_name(item_name)
+      if item.name
+        resp.write "#{item.name} costs $#{item.price}"
+      else
+        resp.write "Item not found"
+        resp.status = 400
+      end
     else
       resp.write "Route not found"
-      resp.status = 404				# Sets the status code.
+      resp.status = 404
     end
 
     resp.finish
